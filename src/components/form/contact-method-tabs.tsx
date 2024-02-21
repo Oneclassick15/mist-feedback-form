@@ -1,12 +1,13 @@
 import { cn } from "@/utils/cn";
 import React from "react";
-import { useFormContext } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 import Field from "../ui/field";
 import FieldDescription from "../ui/field-description";
 import FieldError from "../ui/field-error";
 import Input from "../ui/input";
 import Label from "../ui/label";
 import { FormValues } from "./types";
+import { AsYouType } from "libphonenumber-js";
 
 interface IContactMethodTabsContext {
   currentValue: string;
@@ -73,28 +74,35 @@ function ContactMethodTabsComponent(
           <FieldDescription>How to contact with you?</FieldDescription>
         </Field>
 
-        <TabContent value="phone">
-          <Field>
-            <Label
-              htmlFor="phone"
-              required
-            >
-              Phone
-            </Label>
+        <Controller
+          control={form.control}
+          name="phone"
+          render={({ field }) => (
+            <TabContent value="phone">
+              <Field>
+                <Label
+                  htmlFor="phone"
+                  required
+                >
+                  Phone
+                </Label>
 
-            <Input
-              id="phone"
-              type="tel"
-              placeholder="+380 (__) ___ __ __"
-              autoComplete="off"
-              {...form.register("phone", { required: true })}
-            />
+                <Input
+                  id="phone"
+                  type="tel"
+                  placeholder="+380 (__) ___ __ __"
+                  autoComplete="off"
+                  {...field}
+                  value={new AsYouType("UA").input(field.value ?? "")}
+                />
 
-            {form.formState.errors.phone && (
-              <FieldError>{form.formState.errors.phone.message}</FieldError>
-            )}
-          </Field>
-        </TabContent>
+                {form.formState.errors.phone && (
+                  <FieldError>{form.formState.errors.phone.message}</FieldError>
+                )}
+              </Field>
+            </TabContent>
+          )}
+        />
 
         <TabContent value="email">
           <Field>

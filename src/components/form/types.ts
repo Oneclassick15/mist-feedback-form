@@ -1,3 +1,4 @@
+import { isValidPhoneNumber, parsePhoneNumber } from "libphonenumber-js";
 import { z } from "zod";
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -5,7 +6,15 @@ export const formSchema = z
   .object({
     firstName: z.string().min(1, "You must provide a first name"),
     lastName: z.string().min(1, "You must provide a last name"),
-    phone: z.string().min(1).optional(),
+    phone: z
+      .string()
+      .min(1)
+      .refine(
+        (phone) => isValidPhoneNumber(phone, "UA"),
+        "Invalid phone number",
+      )
+      .transform((phone) => parsePhoneNumber(phone, "UA").format("E.164"))
+      .optional(),
     email: z.string().email().optional(),
     subject: z.string().min(1, "You must select a subject"),
     feedback: z.string().min(1),
