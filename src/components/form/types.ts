@@ -8,7 +8,7 @@ export const formSchema = z
     lastName: z.string().min(1, "You must provide a last name"),
     phone: z
       .string()
-      .min(1)
+      .min(1, "You must provide a phone number")
       .refine(
         (phone) => isValidPhoneNumber(phone, "UA"),
         "Invalid phone number",
@@ -17,7 +17,7 @@ export const formSchema = z
       .optional(),
     email: z.string().email().optional(),
     subject: z.string().min(1, "You must select a subject"),
-    feedback: z.string().min(1),
+    feedback: z.string().min(1, "You must provide a feedback"),
     terms: z.coerce.boolean().refine((c) => c === true, {
       message: "You must consent to the processing of your personal data",
     }),
